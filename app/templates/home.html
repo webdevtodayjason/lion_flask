@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Welcome, {{ current_user.username }}!</h1>
+<p>Use the navigation bar or the links below to manage your reports and logs.</p>
+<div class="mt-4">
+    <a href="{{ url_for('main.daily_logs') }}" class="btn btn-primary">Add Daily Log</a>
+    <a href="{{ url_for('main.view_daily_logs') }}" class="btn btn-secondary">View Daily Logs</a>
+    <a href="{{ url_for('main.generate_report') }}" class="btn btn-success">Generate Report</a>
+</div>
+{% endblock %}

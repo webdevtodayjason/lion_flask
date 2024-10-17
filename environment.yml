@@ -5,10 +5,21 @@ channels:
 dependencies:
   - python=3.11
   - flask
+  - flask-wtf
+  - flask-mail          # Added Flask-Mail
   - sqlalchemy
   - psycopg2
   - pytest
   - flask-bootstrap
+  - flask-migrate
+  - flask-login
+  - werkzeug
+  - wtforms
+  - weasyprint
+  - cairo
+  - pango
+  - gdk-pixbuf
   - pip
   - pip:
     - flask-email
+    - email-validator

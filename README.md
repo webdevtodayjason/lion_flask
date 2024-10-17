@@ -50,7 +50,7 @@ The L.I.O.N Report Management App allows managers to track their activities and 
 
     ```bash
     flask db init
-    flask db migrate -m "Initial migration."
+    flask db migrate -m "Add authentication and CRUD operations"
     flask db upgrade
     ```
 
