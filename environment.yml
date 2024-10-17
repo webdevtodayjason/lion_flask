@@ -1,0 +1,14 @@
+name: lion_report_env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.11
+  - flask
+  - sqlalchemy
+  - psycopg2
+  - pytest
+  - flask-bootstrap
+  - pip
+  - pip:
+    - flask-email
