@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Select Week for Report Generation</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-check">
+        {{ form.week_selection(value='previous', id='previous_week', class='form-check-input') }}
+        <label class="form-check-label" for="previous_week">
+            Previous Work Week
+        </label>
+    </div>
+    <div class="form-check">
+        {{ form.week_selection(value='current', id='current_week', class='form-check-input') }}
+        <label class="form-check-label" for="current_week">
+            Current Work Week
+        </label>
+    </div>
+    {{ form.submit(class="btn btn-primary mt-3") }}
+</form>
+{% endblock %}

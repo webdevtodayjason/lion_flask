@@ -188,26 +188,70 @@ def generate_report():
 @main.route('/daily_logs', methods=['GET', 'POST'])
 @login_required
 def daily_logs():
-    form = DailyLogForm()
+    today = datetime.utcnow().date()
+    current_date = today.strftime('%A, %B %d, %Y')
+
+    # Check if a log for today already exists
+    existing_log = DailyLog.query.filter_by(user_id=current_user.id, date=today).first()
+
+    show_modal = False  # Default value
+    if existing_log:
+        show_modal = True  # Trigger modal in template
+        form = DailyLogForm(obj=existing_log)  # Pre-populate form with existing data
+    else:
+        form = DailyLogForm()  # Empty form for new entry
+
     if form.validate_on_submit():
-        daily_log = DailyLog(
-            user_id=current_user.id,
-            date=datetime.utcnow().date(),
-            achievements=form.achievements.data,
-            issues=form.issues.data,
-            opportunities=form.opportunities.data,
-            next_day_tasks=form.next_day_tasks.data
-        )
-        db.session.add(daily_log)
-        db.session.commit()
-        flash('Daily log submitted successfully.', 'success')
+        if existing_log:
+            # Update existing log
+            existing_log.achievements = form.achievements.data
+            existing_log.issues = form.issues.data
+            existing_log.opportunities = form.opportunities.data
+            existing_log.next_day_tasks = form.next_day_tasks.data
+            db.session.commit()
+            flash('Daily log updated successfully.', 'success')
+        else:
+            # Create new daily log
+            daily_log = DailyLog(
+                user_id=current_user.id,
+                date=today,
+                achievements=form.achievements.data,
+                issues=form.issues.data,
+                opportunities=form.opportunities.data,
+                next_day_tasks=form.next_day_tasks.data
+            )
+            db.session.add(daily_log)
+            db.session.commit()
+            flash('Daily log submitted successfully.', 'success')
         return redirect(url_for('main.view_daily_logs'))
-    return render_template('daily_logs.html', form=form)
+
+    return render_template('daily_logs.html', form=form, current_date=current_date, show_modal=show_modal, existing_log=existing_log)
+
+# Add a new route for editing daily logs
+@main.route('/daily_logs/edit/<int:log_id>', methods=['GET', 'POST'])
+@login_required
+def edit_daily_log(log_id):
+    log = DailyLog.query.get_or_404(log_id)
+    if log.user_id != current_user.id:
+        abort(403)
+    form = DailyLogForm(obj=log)
+    if form.validate_on_submit():
+        log.achievements = form.achievements.data
+        log.issues = form.issues.data
+        log.opportunities = form.opportunities.data
+        log.next_day_tasks = form.next_day_tasks.data
+        db.session.commit()
+        flash('Daily log updated successfully.', 'success')
+        return redirect(url_for('main.view_daily_logs'))
+    current_date = log.date.strftime('%A, %B %d, %Y')
+    return render_template('edit_daily_log.html', form=form, current_date=current_date)
 
 @main.route('/daily_logs/view')
 @login_required
 def view_daily_logs():
     logs = DailyLog.query.filter_by(user_id=current_user.id).order_by(DailyLog.date.desc()).all()
+    print(f"Current user: {current_user.username}, ID: {current_user.id}")
+    print(f"Number of logs retrieved: {len(logs)}")
     return render_template('view_daily_logs.html', logs=logs)
 
 @main.route('/send_report', methods=['POST'])

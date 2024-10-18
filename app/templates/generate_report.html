@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Generate Report</h1>
+<form method="POST" action="{{ url_for('main.generate_report') }}">
+    {{ form.hidden_tag() }}  <!-- Includes CSRF token -->
+
+    <!-- Week Selection Buttons -->
+    <div class="form-group">
+        <label for="week_selection">Select Week:</label><br>
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            {% for subfield in form.week_selection %}
+                <label class="btn btn-outline-primary {% if subfield.checked %}active{% endif %}">
+                    {{ subfield(class="form-check-input", id=subfield.id) }}
+                    {{ subfield.label.text }}
+                </label>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+{% endblock %}

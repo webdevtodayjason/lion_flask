@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Report Details</h2>
+<p><strong>User:</strong> {{ report.user.username }}</p>
+<p><strong>Date Sent:</strong> {{ report.sent_at.strftime('%Y-%m-%d') }}</p>
+
+<div class="mb-4">
+    <h3>Last Week</h3>
+    <p>{{ report.last_week }}</p>
+</div>
+<div class="mb-4">
+    <h3>Issues</h3>
+    <p>{{ report.issues }}</p>
+</div>
+<div class="mb-4">
+    <h3>Opportunities</h3>
+    <p>{{ report.opportunities }}</p>
+</div>
+<div class="mb-4">
+    <h3>Next Week</h3>
+    <p>{{ report.next_week }}</p>
+</div>
+{% endblock %}
